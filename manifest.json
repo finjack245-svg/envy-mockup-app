@@ -1,1 +1,17 @@
-{"name":"ENVY — Mockup Archive","short_name":"ENVY","start_url":"./index.html","display":"standalone","background_color":"#070809","theme_color":"#08090a","orientation":"portrait","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}
+{
+  "name": "ENVY — Underground Streetwear",
+  "short_name": "ENVY",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090909",
+  "theme_color": "#090909",
+  "orientation": "portrait",
+  "description": "Underground oversized streetwear from ENVY.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
