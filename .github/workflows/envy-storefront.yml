@@ -1,0 +1,46 @@
+name: ENVY storefront build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: envy-storefront-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-package:
+    name: Validate and package storefront
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate storefront and PWA
+        run: node scripts/validate-storefront.mjs
+
+      - name: Package website files
+        run: |
+          mkdir -p dist
+          cp index.html manifest.json sw.js icon.svg dist/
+          cp -r archive.html dist/
+          tar -czf envy-storefront.tar.gz -C dist .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: envy-storefront
+          path: envy-storefront.tar.gz
+          if-no-files-found: error
+          retention-days: 14
