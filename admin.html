@@ -13,12 +13,12 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./supabase-config.js"></script>
 <script>
-const $=id=>document.getElementById(id);let sb=null,session=null,products=[];
+const $=id=>document.getElementById(id);let sb=null,session=null,products=[];const OWNER_UID='fa6bc3fa-d27b-40ac-813f-a95b4f27dfea';
 function message(t){$('message').textContent=t;$('message').classList.remove('hidden')}
 function money(n){return 'R'+Number(n).toFixed(2)}
 async function init(){if(!window.supabase||!window.ENVY_SUPABASE_URL||!window.ENVY_SUPABASE_PUBLISHABLE_KEY){$('loginMsg').textContent='Could not load the secure store connection.';$('loginMsg').classList.remove('hidden');return}sb=window.supabase.createClient(window.ENVY_SUPABASE_URL,window.ENVY_SUPABASE_PUBLISHABLE_KEY);const {data}=await sb.auth.getSession();if(data.session){session=data.session;await showApp()}}
 $('loginForm').onsubmit=async e=>{e.preventDefault();$('loginMsg').textContent='Signing in…';$('loginMsg').classList.remove('hidden');const {data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error){$('loginMsg').textContent=error.message;return}session=data.session;await showApp()};
-async function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden');await loadProducts();await loadOrders()}
+async function showApp(){if(!session||session.user.id!==OWNER_UID){await sb.auth.signOut();$('loginMsg').textContent='This account is not authorised to manage the ENVY store.';$('loginMsg').classList.remove('hidden');return}$('login').classList.add('hidden');$('app').classList.remove('hidden');await loadProducts();await loadOrders()}
 $('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));$('productsPanel').classList.toggle('hidden',b.dataset.tab!=='products');$('ordersPanel').classList.toggle('hidden',b.dataset.tab!=='orders');if(b.dataset.tab==='orders')loadOrders()});
 async function loadProducts(){const {data,error}=await sb.from('products').select('*').order('created_at',{ascending:false});if(error){$('productList').textContent=error.message;return}products=data||[];$('productList').innerHTML=products.length?products.map(p=>'<div class="product"><img src="'+(p.image_path||'')+'" alt=""><div><h3>'+escapeHtml(p.name)+'</h3><div class="muted">'+money(p.price)+' · '+escapeHtml(p.category)+' · '+(p.is_active?'Visible':'Hidden')+'</div><div class="muted">'+escapeHtml((p.sizes||[]).join(', '))+'</div></div><div class="row"><button class="btn" data-edit="'+p.id+'">Edit</button><button class="btn" data-toggle="'+p.id+'">'+(p.is_active?'Hide':'Show')+'</button></div></div>').join(''):'No products yet. Add your first product above.'}
