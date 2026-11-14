@@ -1,17 +1,14 @@
 {
-  "name": "ENVY — Underground Streetwear",
+  "name": "ENVY — The Movement",
   "short_name": "ENVY",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#090909",
-  "theme_color": "#090909",
+  "background_color": "#080808",
+  "theme_color": "#080808",
   "orientation": "portrait",
-  "description": "Underground oversized streetwear from ENVY.",
+  "description": "A streetwear culture community. Discover the ENVY movement.",
   "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
