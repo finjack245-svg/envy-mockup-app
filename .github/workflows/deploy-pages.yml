@@ -2,7 +2,7 @@ name: Deploy ENVY PWA to GitHub Pages
 
 on:
   push:
-    branches: [main, social-platform]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
